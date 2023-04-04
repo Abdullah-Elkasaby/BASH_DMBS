@@ -92,8 +92,13 @@ function connectDatabase
     fi
 }
 
+function listDatabases 
+{
+    ls ./databases
+}
+
 createDatabase
 connectDatabase
 exitDatabase
-pwd
+listDatabases
 drobDatabase
