@@ -30,6 +30,8 @@ function checkLastCommand
 
 
 # Function to validate database name input
+
+#Database name with only letters, digits and underscores should return success code 0
 function validate_dbname() {
 
     dbname=$1
