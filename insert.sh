@@ -39,10 +39,10 @@ function selectTable
     # checking if it's in the database which we are connected to
     if [[ -f $(pwd)/$tableName ]] && ! [[ -z $tableName ]]
     then
-        echo EXISTS
+        echo "$tableName Selected!"
         return 0
     else
-        echo DOESNOT EXIST!
+        echo "Table $tableName DOES NOT EXIST!"
         return 1
     fi
 
@@ -138,7 +138,7 @@ function promptForPK
 
 function createTable
 {
-    
+    # TODO: shouldn't create anything unless everything is validated   
     read -p "Enter Table Name--> " tableName
     read -p "Enter Columns Number--> " columnsNumber
     # check if colsNum is int
@@ -155,7 +155,7 @@ function createTable
     while  [[ counter -lt columnsNumber ]]
     do
         currCol=$(( counter+1 ))
-        # MISSING CHECKING FOR TYPE
+        # MISSING CHECKING FOR TYPE SPECIALLY INT
         read -p "Enter Column [$currCol] Name--> " colName
         echo "Enter Column [$currCol] Type--> "
         select type in "int" "string"
@@ -191,20 +191,50 @@ function createTable
 
 # createTable
 
-connectDatabase
-listTables 
-# selectTable
+# connectDatabase
+# listTables 
+# read -p "Enter table name from the listed tables--> " tableName 
+# selectTable $tableName
 # exitDatabase
 
 
+# cut the line into column name and data type
+# check if pk is set 
+# if not find it in curr column name and edit the column name to be with out it
 
-# select the table
-# 
 function insertIntoTable
 {
-    read -p "Enter Table Name--> " tableName
-    if selectTable tableName
-    then
-        :
-    fi
+    lineIndex=1
+    fieldIndex=1
+    colsNum=3
+    nameIndex=1
+    typeIndex=2
+
+    recordValues=""
+    tableName=$1
+    # -s not to list anything not delimited 
+    
+    counter=0
+    while [[ counter -lt colsNum ]]
+    do
+    
+        colName=`cut -s -d  "|" -f $fieldIndex $tableName | cut -d ":" -f $nameIndex | head -1`
+        colType=`cut -s -d  "|" -f $fieldIndex $tableName | cut -d ":" -f $typeIndex | head -1`
+        read -p "Enter Column:[$colName] Value--> " colValue
+        # TODO: test input and its datatyp
+        recordValues+="$colValue|"
+        # then check the recordValues
+        # Finally Write them to file
+
+        (( fieldIndex++ ))
+        (( counter++ ))
+    done
+    
+
+    # add new line to add the next record
+    # printf "\n" >> $tableName
+    printf "\n$recordValues" >> $tableName
+
 }
+
+insertIntoTable table
