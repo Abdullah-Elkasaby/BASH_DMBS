@@ -67,6 +67,7 @@ function createDatabase
     if ! validate_dbname $dbName
     then
         return 1
+        # needs paramter
     elif checkDatabaseExists 
         then
         echo "ERROR! Database  Name Already Exists"
