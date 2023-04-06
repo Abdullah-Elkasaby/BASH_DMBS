@@ -106,7 +106,7 @@ function exitDatabase
 function isInteger
 {   
 
-    intPattern="^[0-9]+"
+    intPattern="^[0-9]+$"
     if [[ $1 =~ $intPattern ]]
     then
         return 0
@@ -134,6 +134,16 @@ function promptForPK
 
 }
 
+
+function isValidString
+{
+    if [[ $1 =~ ^[a-zA-Z0-9]+$ ]]
+    then
+        return 0
+    else
+        return 1
+    fi
+}
 
 
 function createTable
@@ -204,24 +214,40 @@ function createTable
 
 function insertIntoTable
 {
-    lineIndex=1
-    fieldIndex=1
+    # arguments passed to the function
+    tableName=$1
     colsNum=3
+
+
+    fieldIndex=1
     nameIndex=1
     typeIndex=2
+    counter=0
 
     recordValues=""
-    tableName=$1
-    # -s not to list anything not delimited 
     
-    counter=0
     while [[ counter -lt colsNum ]]
     do
     
+        # -s not to list anything not delimited 
         colName=`cut -s -d  "|" -f $fieldIndex $tableName | cut -d ":" -f $nameIndex | head -1`
         colType=`cut -s -d  "|" -f $fieldIndex $tableName | cut -d ":" -f $typeIndex | head -1`
-        read -p "Enter Column:[$colName] Value--> " colValue
-        # TODO: test input and its datatyp
+        read -p "Enter Column:[$colName:$colType] Value--> " colValue
+
+        if [ colType = "int" ]
+        then
+            while ! isInteger $colValue
+            do 
+                read -p "INVALID VALUE!\n Enter Column:[$colName:$colType] Value--> " colValue        
+            done
+        else
+            while ! isValidString $colValue
+            do 
+                read -p "INVALID VALUE!\n Enter Column:[$colName:$colType] Value--> " colValue        
+            done
+            # check for string not containg any special characters
+        fi
+        # TODO: test input and its datatype
         recordValues+="$colValue|"
         # then check the recordValues
         # Finally Write them to file
@@ -231,8 +257,7 @@ function insertIntoTable
     done
     
 
-    # add new line to add the next record
-    # printf "\n" >> $tableName
+    # append new line and the next record to the table
     printf "\n$recordValues" >> $tableName
 
 }
