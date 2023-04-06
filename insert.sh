@@ -27,6 +27,11 @@ function tableMenu
 # tableMenu
 
 
+function listTables
+{
+    ls -p | grep -v /
+}
+
 # The user should be in the database he wants, so select database beforhand
 function selectTable 
 {
@@ -42,6 +47,8 @@ function selectTable
     fi
 
 }
+
+
 
 
 function checkDatabaseExists 
@@ -73,8 +80,8 @@ function checkLastCommand
 
 function connectDatabase 
 {
-    echo "Enter Database name to connect to: "
-    read dbName
+    
+    read -p "Enter Database name to connect to--> " dbName
     if  checkDatabaseExists $dbName
     then
         echo "ERROR! Database  Does Not Exists"
@@ -182,9 +189,10 @@ function createTable
     echo $columnSchema
 }
 
-createTable
+# createTable
 
-# connectDatabase
+connectDatabase
+listTables 
 # selectTable
 # exitDatabase
 
