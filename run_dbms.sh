@@ -32,8 +32,6 @@ function validate_tableName() {
 
 
 
-function validate_dbname() {
-
 
     # Check for empty name
     if [[ $tableName = "" ]]; then
