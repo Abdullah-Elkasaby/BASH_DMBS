@@ -45,10 +45,6 @@ while true; do
     continue
   fi
 
-  if [[ "$newValue" =~ ^[0-9] ]]; then
-    echo "Error: new value cannot start with a number."
-    continue
-  fi
 
   if [[ "$newValue" =~ ^[_] ]]; then
     echo "Error:  new value cannot start with an underscore."
