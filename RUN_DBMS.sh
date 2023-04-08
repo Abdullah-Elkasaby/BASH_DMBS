@@ -1,5 +1,17 @@
 #!/bin/bash
 
+function checkDatabaseExists 
+{
+    if [ -d ./databases/$1/ ]
+    then
+        return 1
+    else 
+        return 0
+    fi
+    # success
+    
+
+}
 
 function checkLastCommand
 {
@@ -12,7 +24,33 @@ function checkLastCommand
 }
 
 
+# Function to validate database name input
+function validate_dbname() {
 
+    dbname=$1
+    # Check for empty name
+    if [[ $dbname = "" ]]; then
+        echo "Error: database name is not set, please enter database name"
+        return 1
+    fi
+
+    # Check for invalid characters
+    if [[ $dbname =~ [^a-zA-Z0-9_] ]]; then
+        echo "Error: invalid database name. Database names can only contain letters, digits, and underscores."
+        return 1
+    fi
+
+   
+    # Check for leading number or special character
+    if [[ $dbname =~ ^[0-9] || $dbname =~ ^[^a-zA-Z0-9_] || $dbname =~ ^[\W_]+ ]]; then
+        echo "Error: invalid database name. Database names cannot start with a number or special character."
+        return 1
+    fi
+
+   
+    # Validation successful
+    return 0
+}
 
 
 function createDatabase 
@@ -25,7 +63,7 @@ function createDatabase
     then
         return 1
         # needs paramter
-    elif checkDatabaseExists $dbName
+    elif checkDatabaseExists 
         then
         echo "ERROR! Database  Name Already Exists"
         return 1
@@ -50,7 +88,7 @@ function drobDatabase
 {
     echo "Enter Database name to drop: "
     read dbName
-    if ! [[ -d databases/$dbName ]]
+    if  checkDatabaseExists $dbName
     then
         echo "ERROR! Database  Does Not Exist"
     else 
@@ -81,7 +119,7 @@ function connectDatabase
 {
     echo "Enter Database name to connect to: "
     read dbName
-    if ! [[ -d databases/$dbName ]]
+    if  checkDatabaseExists $dbName
     then
         echo "ERROR! Database  Does Not Exists"
     else 
@@ -89,7 +127,6 @@ function connectDatabase
         echo "Connected To Database Successfully"
         source table_menu.sh "./databases/$dbName"
     fi
-    
 }
 
 function listDatabases 
