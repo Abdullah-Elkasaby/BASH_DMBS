@@ -1,2 +1,0 @@
-id(pk):int;name:string;
-1;ahmed;
