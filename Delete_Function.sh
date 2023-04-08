@@ -2,6 +2,7 @@
 
 Delete_Function() {
     read -p "Enter table name: " tableName
+    tableName="$1/tableName"
     if [[ ! -f $tableName ]]; then
         echo "Table '$tableName' does not exist."
         return 1
@@ -63,4 +64,4 @@ Delete_Function() {
    
 }
 
-Delete_Function
+Delete_Function $1
