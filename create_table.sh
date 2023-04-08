@@ -103,6 +103,7 @@ function createTable
     # create a file and add the schema to it
     # user should be connected to the database i.e in the db dir
     printf $columnSchema >> "./databases/$dbName/$tableName"
+    echo 
     echo "Table $tableName was created successfully!"
 }
 

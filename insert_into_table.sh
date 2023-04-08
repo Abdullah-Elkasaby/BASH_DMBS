@@ -23,13 +23,6 @@ function checkLastCommand
 
 
 
-
-function exitDatabase 
-{
-    cd ../../
-}
-
-
 function isInteger
 {   
 
@@ -137,7 +130,7 @@ function insertIntoTable
         return 1
     fi
 
-    path="./database/$dbName/$tableName"
+    path="$dbName/$tableName"
 
     # tr is the translate or delete cmd it -c for complement and d for delete 
     typeset -i colsNum=` head -1 $path | tr -cd '|' | wc -c `
@@ -160,8 +153,13 @@ function insertIntoTable
         if [[ $colName =~ "(PK)" ]]
         then 
             checkDuplicatePk $path $colValue
+            if checkLastCommand 
+            then
+                return 1
+            fi
         else
-            return 1
+            # continue
+            :
         fi
         
 

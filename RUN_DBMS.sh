@@ -131,7 +131,7 @@ function connectDatabase
         clear
         echo "Connected To Database Successfully"
         echo $dbName
-        source table_menu.sh $dbName
+        source table_menu.sh "./databases/$dbName"
     fi
 }
 

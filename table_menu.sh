@@ -8,7 +8,7 @@ function listTables
     counter=1
 
     echo "Database[$dbName] has: "
-    for tableName in ` ls ./databases/$dbName/ `
+    for tableName in ` ls $dbName `
     do 
         echo "Table[$(( counter++ ))] --> $tableName "
     done
