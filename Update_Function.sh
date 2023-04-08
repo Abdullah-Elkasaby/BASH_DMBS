@@ -29,7 +29,7 @@ if [[ -z $NumofRow ]]; then
     return 1
 fi
 ############
-#namee:string
+#name:string
 colType=$(cut -d'|' -f$Numofcol "$tablename" | cut -d':' -f2 | head -1)
 
 #...
