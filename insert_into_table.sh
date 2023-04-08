@@ -60,6 +60,7 @@ function isValidString
 
 
 
+
 function getPrimKeyFieldNum
 {
     local tableName=$1
@@ -68,7 +69,33 @@ function getPrimKeyFieldNum
     echo $currField
 }
 
+# typeset -i p=$(getPrimKeyFieldNum table)
+# echo $(( p ))
 
+
+
+# args $1 is table name, $2 is the value
+function checkDuplicatePk 
+{
+    local tableName=$1
+    local valueToCheck=$2
+    pkFeildNum=$(getPrimKeyFieldNum $tableName)
+    # delete the first line containing the schema then get the pk column
+    local pkColValues=`sed '1d' $tableName | cut -d "|" -f $pkFeildNum `
+    # echo $pkColValues
+    for currValue in $pkColValues
+    do 
+        # echo $currValue -- $valueToCheck
+        if [ $currValue = $valueToCheck ]
+        then
+            echo "ERROR! Duplicate Primary Key!"
+            return 1
+        fi
+    done
+    return 0
+}
+
+# checkDuplicatePk table 55
 
 # database name is passed to function 
 function getTable 
@@ -91,8 +118,6 @@ function getTable
 
 
 
-typeset -i p=$(getPrimKeyFieldNum table)
-echo $(( p ))
 
 # cut the line into column name and data type
 # check if pk is set 
@@ -112,7 +137,7 @@ function insertIntoTable
         return 1
     fi
 
-    path="$dbName/$tableName"
+    path="./database/$dbName/$tableName"
 
     # tr is the translate or delete cmd it -c for complement and d for delete 
     typeset -i colsNum=` head -1 $path | tr -cd '|' | wc -c `
@@ -130,6 +155,15 @@ function insertIntoTable
         colName=`cut -s -d  "|" -f $fieldIndex $path | cut -d ":" -f $nameIndex | head -1`
         colType=`cut -s -d  "|" -f $fieldIndex $path | cut -d ":" -f $typeIndex | head -1`
         read -p "Enter Column:[$colName:$colType] Value--> " colValue
+        
+        #checking if the column is a prmary key 
+        if [[ $colName =~ "(PK)" ]]
+        then 
+            checkDuplicatePk $path $colValue
+        else
+            return 1
+        fi
+        
 
         if [ $colType = "int" ]
         then
@@ -157,6 +191,13 @@ function insertIntoTable
 
     # append new line and the next record to the table
     printf "\n$recordValues" >> $path
+    if checkLastCommand
+    then
+        echo "Data Inserted Successfuly!"
+        return 0
+    else
+        echo "ERROR in Inserting Data!"
+    fi
 
 }
 

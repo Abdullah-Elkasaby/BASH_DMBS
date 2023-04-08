@@ -1,0 +1,1 @@
+id:int|name(PK):string|address:string|phone:string|

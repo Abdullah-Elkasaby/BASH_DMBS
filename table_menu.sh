@@ -39,7 +39,9 @@ function tableMenu
     select opt in "${options[@]}" 
     do
         case $REPLY in 
-            1)  listTables $dbName
+            1)  clear
+                listTables $dbName
+                tableMenu $dbName
                 ;;
             2)  selectTable $dbName 
                 ;;
@@ -47,7 +49,9 @@ function tableMenu
                 source create_table.sh $dbName
                 tableMenu $dbName
                 ;;
-            4) source insert_into_table.sh "./databases/$dbName"
+            4)  clear
+                source insert_into_table.sh $dbName
+                tableMenu $dbName
                 ;;
             5) echo updateTable
                 ;;

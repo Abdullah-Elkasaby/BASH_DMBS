@@ -130,6 +130,7 @@ function connectDatabase
     else 
         clear
         echo "Connected To Database Successfully"
+        echo $dbName
         source table_menu.sh $dbName
     fi
 }
