@@ -2,16 +2,8 @@
 
 
 
-function listTables
-{
-    ls -p | grep -v /
-}
 
-
-
-
-
-function checkLastCommand
+function isLastCmdTrue
 {
     if [ $? ] 
         then 
@@ -68,7 +60,7 @@ function getPrimKeyFieldNum
 
 
 # args $1 is table name, $2 is the value
-function checkDuplicatePk 
+function isNotDuplicatePk 
 {
     local tableName=$1
     local valueToCheck=$2
@@ -88,7 +80,7 @@ function checkDuplicatePk
     return 0
 }
 
-# checkDuplicatePk table 55
+# isNotDuplicatePk table 55
 
 # database name is passed to function 
 function getTable 
@@ -119,10 +111,11 @@ function getTable
 function insertIntoTable
 {
     # database name is passed to the function
-    dbName=$1
+    local dbName=$1
     read -p "Enter Table Name--> " tableName
+    local path="$dbName/$tableName"
 
-    if getTable "$dbName/$tableName"
+    if getTable $path
     then
         :
     else
@@ -130,7 +123,6 @@ function insertIntoTable
         return 1
     fi
 
-    path="$dbName/$tableName"
 
     # tr is the translate or delete cmd it -c for complement and d for delete 
     typeset -i colsNum=` head -1 $path | tr -cd '|' | wc -c `
@@ -139,28 +131,26 @@ function insertIntoTable
     typeIndex=2
     counter=0
 
-    recordValues=""
-    
+    recordValues=""    
     while [[ counter -lt colsNum ]]
     do
     
         # -s not to list anything not delimited 
-        colName=`cut -s -d  "|" -f $fieldIndex $path | cut -d ":" -f $nameIndex | head -1`
-        colType=`cut -s -d  "|" -f $fieldIndex $path | cut -d ":" -f $typeIndex | head -1`
+        local colName=`cut -s -d  "|" -f $fieldIndex $path | cut -d ":" -f $nameIndex | head -1`
+        local colType=`cut -s -d  "|" -f $fieldIndex $path | cut -d ":" -f $typeIndex | head -1`
         read -p "Enter Column:[$colName:$colType] Value--> " colValue
         
         #checking if the column is a prmary key 
         if [[ $colName =~ "(PK)" ]]
         then 
-            checkDuplicatePk $path $colValue
-            if checkLastCommand 
+            
+            if ! isNotDuplicatePk $path $colValue   
             then
                 return 1
             fi
-        else
-            # continue
-            :
+
         fi
+        
         
 
         if [ $colType = "int" ]
@@ -189,7 +179,7 @@ function insertIntoTable
 
     # append new line and the next record to the table
     printf "\n$recordValues" >> $path
-    if checkLastCommand
+    if isLastCmdTrue
     then
         echo "Data Inserted Successfuly!"
         return 0

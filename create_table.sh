@@ -45,6 +45,7 @@ function isValidString
 function createTable
 {   
     dbName=$1
+    echo $dbName
     # user supposed to be in the database dir
     # TODO: shouldn't create anything unless everything is validated   
     read -p "Enter Table Name--> " tableName
@@ -61,7 +62,7 @@ function createTable
     # check if colsNum is int
     while ! isInteger $columnsNumber
     do 
-        read -p "INVALID VALUE! `echo $'\n '` Enter Column:[$colName:$colType] Value--> " colValue        
+        read -p "INVALID VALUE! `echo $'\n '` Enter Columns Number--> " columnsNumber        
     done
 
 
@@ -102,9 +103,13 @@ function createTable
      # TODO: Handle the case of no PK
     # create a file and add the schema to it
     # user should be connected to the database i.e in the db dir
-    printf $columnSchema >> "./databases/$dbName/$tableName"
-    echo 
-    echo "Table $tableName was created successfully!"
+    printf $columnSchema >> "$dbName/$tableName"
+    if checkLastCommand
+    then
+        echo "Table $tableName was created successfully!"
+    else
+        echo ERROR Creating Table
+    fi
 }
 
 # $1 is the Database Name

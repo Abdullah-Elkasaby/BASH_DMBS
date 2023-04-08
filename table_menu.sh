@@ -4,9 +4,8 @@
 
 function listTables
 {
-    dbName=$1
-    counter=1
-
+    local dbName=$1
+    local counter=1
     echo "Database[$dbName] has: "
     for tableName in ` ls $dbName `
     do 
@@ -16,11 +15,14 @@ function listTables
 
 function selectTable 
 {
+
     read -p "Enter Table Name--> " tableName
-    # checking if it's in the database which we are connected to
-    if [[ -f $(pwd)/$tableName ]] && ! [[ -z $tableName ]]
+    path="$1/$tableName"
+    if [[ -f $path ]] && ! [[ -z $path ]]
     then
-        echo "$tableName Selected!"
+        
+        # -t to make a table of it. -s for the seprator
+        column -t -s "|" $path
         return 0
     else
         echo "Table $tableName DOES NOT EXIST!"
@@ -33,7 +35,9 @@ function selectTable
 
 function tableMenu 
 {
-    dbName=$1
+    echo "_____________________________________"
+    echo
+    local dbName=$1
     PS3="Connected to [$dbName]--> "
     options=("List Tables" "Select a Table" "Create Table" "Insert into Table" "Update Table" "Delete from Table" "Drop Table")
     select opt in "${options[@]}" 
@@ -43,7 +47,10 @@ function tableMenu
                 listTables $dbName
                 tableMenu $dbName
                 ;;
-            2)  selectTable $dbName 
+
+            2)  clear
+                selectTable $dbName 
+                tableMenu $dbName
                 ;;
             3)  clear
                 source create_table.sh $dbName
@@ -69,4 +76,5 @@ function tableMenu
 
 
 # $1 is the database names passed when running the file
+# echo $1
 tableMenu $1
