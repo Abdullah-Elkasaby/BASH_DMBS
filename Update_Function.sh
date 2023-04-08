@@ -9,7 +9,7 @@ if [[ ! -f $tablename ]]; then
     echo "table '$tablename' does not exist."
     return 1
 fi
-############
+###########
 
 read -p "Enter the name and data type of the column to update (in the format 'name of column:datatype'): " columnToUpdate
 Numofcol=$(awk -F'|' -v col="$columnToUpdate" 'NR==1{for(i=1;i<=NF;i++)if($i==col)print i}' "$tablename")
