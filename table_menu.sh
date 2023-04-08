@@ -60,15 +60,27 @@ function tableMenu
                 source insert_into_table.sh $dbName
                 tableMenu $dbName
                 ;;
-            5) echo updateTable
+            5) clear
+                source Update_Function.sh $dbName
+                tableMenu $dbName
                 ;;
-            6) echo DeleteFromTable
+            6) clear
+                source Delete_Function.sh $dbName
+                tableMenu $dbName
                 ;;
-            7) echo dropTable
+            7) clear
+                source dropTable.sh $dbName
+                tableMenu $dbName
                 ;;
-            
+
+            8) clear
+
+                return 0;
+                source ./RUN_DBMS.sh
+                ;;
             *) echo CHOICE DOES NOT EXIST!
                 ;; 
+                
         esac
             
     done 
