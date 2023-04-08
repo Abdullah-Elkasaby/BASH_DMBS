@@ -82,7 +82,7 @@ function createDatabase
     fi
 
 
-    echo "Database Created Successfuly!" 
+    echo "Database[$dbName] Created Successfuly!" 
 
 }
 
@@ -97,7 +97,18 @@ function drobDatabase
     then
         echo "ERROR! Database  Does Not Exist"
     else 
-        rmdir databases/$dbName
+
+        echo "Confirm Removing Database[$dbName]."
+        select opt in "Confrim" "Cancel"
+        do
+            case $REPLY in
+            1)  break ;;
+            2)  echo "Exited!"
+                return ;;
+            esac
+        done
+
+        rm -r databases/$dbName
         # check if cmd was a success
         if [ $? ] 
         then 
@@ -117,28 +128,50 @@ function connectDatabase
     then
         echo "ERROR! Database  Does Not Exists"
     else 
-        cd ./databases/$dbName
-        if checkLastCommand
-        then 
-            echo "Connected To Database Successfully"
-            tempPS1=$PS1
-            PS3="[$dbName]: "
-            echo "testing PS3"
-            read dd
-        else 
-            echo "ERROR Connecting To Database $dbName"
-            
-        fi
+        clear
+        echo "Connected To Database Successfully"
+        source table_menu.sh $dbName
     fi
 }
 
 function listDatabases 
 {
-    ls ./databases
+    counter=1
+    for dbName in `ls ./databases`
+    do 
+        echo "Database[$(( counter++ ))]--> $dbName "
+    done
+
 }
 
-createDatabase
-connectDatabase
-exitDatabase
-listDatabases
-drobDatabase
+
+
+function start_dbms
+{   
+    echo
+    echo "Select an option"
+    options=("Create a new database" "List all databases" "Connect to a specific database" "Drop a database" "Quit")
+    select opt in "${options[@]}" 
+    do
+        case $REPLY in
+            1)    clear
+                createDatabase 
+                start_dbms 
+                ;;
+            2)  clear 
+                listDatabases 
+                echo "_________________________________________"
+                start_dbms
+                 ;;
+            3)  connectDatabase  
+                ;;
+
+            4)  drobDatabase 
+                start_dbms ;;
+            5)  exit ;;
+            *)  echo "Invalid option. Please try again." ;;
+        esac
+    done
+}
+
+start_dbms
