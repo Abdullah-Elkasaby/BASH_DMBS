@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 source ./validate_dbname.sh
 # Test case 1: Empty database name should return error code 1
 validate_dbname ""
