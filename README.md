@@ -42,4 +42,3 @@
     <li> Update existing rows in a table.
     <li> Delete existing rows from a table.
 </ol>
-Show the list of tables in a database.
