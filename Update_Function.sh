@@ -2,7 +2,6 @@
 
 updateTable () {
 
-
 #check if table does not exist
 read -p "Enter table name: " tablename
 tablename="$1/$tablename"
