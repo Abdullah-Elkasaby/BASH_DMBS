@@ -25,8 +25,11 @@
     * Using Bash: <br> 
       `bash RUN_DBMS`
 
-    * Changing the file into an executable (Linux) <br> 
-      `chmod u+x RUN_DBMS`
+    * Changing the file into an executable (Linux) and then running it. <br> 
+       ```
+       chmod u+x RUN_DBMS
+       ./RUN_DBMS
+       ```
 
 ### You're done! You can now start using Bash DBMS.
 <ol>
