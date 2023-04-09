@@ -5,6 +5,7 @@ updateTable () {
 
 #check if table does not exist
 read -p "Enter table name: " tablename
+tablename="$1/$tablename"
 if [[ ! -f $tablename ]]; then
     echo "table '$tablename' does not exist."
     return 1
@@ -77,4 +78,4 @@ echo "Update successful."
 
 }
 
-updateTable
+updateTable $1

@@ -2,6 +2,7 @@
 function dropTable {
     echo "Enter table name to drop: "
     read tbName
+    tbName="$1/$tbName"
     if ! [[ -f $tbName ]]
     then
         echo "ERROR! Database  Does Not Exist"
@@ -16,3 +17,5 @@ function dropTable {
         fi
     fi
 }
+
+dropTable $1
