@@ -8,7 +8,6 @@ Delete_Function() {
         return 1
     fi
 
-    
      ##########################
 
     mapfile -t lines < "$tableName"
