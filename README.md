@@ -32,6 +32,8 @@
        ```
 
 ### You're done! You can now start using Bash DBMS.
+
+### Project Features:
 <ol>
     <li> Create a new database.</li>
     <li> Delete an existing database.
